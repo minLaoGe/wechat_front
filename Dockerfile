@@ -20,7 +20,7 @@ FROM nginx
 COPY --from=build /app/build /usr/share/nginx/html
 
 # 复制自定义的 Nginx 配置文件到容器
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY /app/build/nginx.conf /etc/nginx/conf.d/default.conf
 
 
 # 暴露80端口
