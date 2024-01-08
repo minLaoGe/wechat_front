@@ -1,7 +1,7 @@
 {
   "name": "material-cra-tailwind-ts",
   "version": "5.0.0",
-  "homepage": "/wechat-front",
+  "homepage": "/wechatFront",
   "private": true,
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
