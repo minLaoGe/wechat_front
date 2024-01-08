@@ -1,6 +1,6 @@
 # 第一阶段：构建React应用
 # 使用特定版本的 Node.js 镜像
-FROM docker.io/node:laster
+FROM node:19
 
 # 设置工作目录
 WORKDIR /app
