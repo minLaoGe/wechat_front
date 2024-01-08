@@ -66,7 +66,7 @@ export default function PermanentDrawerRight(prop: Prop) {
 
         // 如果端口号是 80 (或在 HTTPS 下是 443)，通常不需要在 URL 中指定
         if (port === "80" || port === "443" || port === "") {
-            return `http://${hostname}`;
+            return `${protocol}//${hostname}`;
         } else {
             return `${protocol}//${hostname}:${port}`;
         }
@@ -76,7 +76,7 @@ export default function PermanentDrawerRight(prop: Prop) {
     const connectWebSocket = () => {
        let   url = ''
         if ( process.env.NODE_ENV === 'production'){
-            url = getFullURL()+":3001/config/test";
+            url = getFullURL()+"/wechatFront/config/test";
         }else {
             url = "http://127.0.0.1:8080/config/test";
         }
