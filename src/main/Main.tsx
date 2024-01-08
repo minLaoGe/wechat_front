@@ -59,9 +59,29 @@ export default function PermanentDrawerRight(prop: Prop) {
         }
 
     }
+    const  getFullURL = ()=> {
+        const protocol = window.location.protocol; // 获取协议（例如 'http:' 或 'https:'）
+        const hostname = window.location.hostname; // 获取主机名
+        const port = window.location.port;         // 获取端口号
+
+        // 如果端口号是 80 (或在 HTTPS 下是 443)，通常不需要在 URL 中指定
+        if (port === "80" || port === "443" || port === "") {
+            return `${protocol}//${hostname}`;
+        } else {
+            return `${protocol}//${hostname}:${port}`;
+        }
+    }
+
     // 创建WebSocket连接的函数
     const connectWebSocket = () => {
-        socketRef.current = io('http://127.0.0.1:8080/test');
+       let   url = ''
+        if ( process.env.NODE_ENV === 'production'){
+            url = getFullURL()+"/config/test";
+        }else {
+            url = "http://127.0.0.1:8080/config/test";
+        }
+
+        socketRef.current = io(url);
 
         socketRef.current.onmessage = (event: any) => {
             console.log('Message from server ', event.data);
