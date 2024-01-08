@@ -66,7 +66,7 @@ export default function PermanentDrawerRight(prop: Prop) {
 
         // 如果端口号是 80 (或在 HTTPS 下是 443)，通常不需要在 URL 中指定
         if (port === "80" || port === "443" || port === "") {
-            return `${protocol}//${hostname}`;
+            return `http://${hostname}`;
         } else {
             return `${protocol}//${hostname}:${port}`;
         }
