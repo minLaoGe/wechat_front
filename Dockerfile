@@ -1,6 +1,6 @@
 # 第一阶段：构建React应用
 # 使用特定版本的 Node.js 镜像
-FROM node:19
+FROM node:16.20.2
 
 # 设置工作目录
 WORKDIR /app
