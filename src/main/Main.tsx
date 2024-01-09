@@ -76,9 +76,9 @@ export default function PermanentDrawerRight(prop: Prop) {
     const connectWebSocket = () => {
        let   url = ''
         if ( process.env.NODE_ENV === 'production'){
-            url = getFullURL()+"/wechatFront/config/test";
+            url = getFullURL()+"/config/test";
         }else {
-            url = "http://127.0.0.1:8080/config/test";
+            url = "http://127.0.0.1:3000/config/test";
         }
         console.log(url)
         socketRef.current = io(url);
