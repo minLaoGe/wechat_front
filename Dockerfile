@@ -8,6 +8,10 @@ WORKDIR /app
 # 复制项目文件到容器中
 COPY . /app/
 
+RUN npm config set registry https://registry.npm.taobao.org
+RUN npm config set electron_mirror https://npm.taobao.org/mirrors/electron/
+RUN npm config set sass_binary_site https://npm.taobao.org/mirrors/node-sass/
+RUN npm config set phantomjs_cdnurl https://npm.taobao.org/mirrors/phantomjs/
 # 安装依赖并构建项目
 RUN npm install
 RUN npm run build
