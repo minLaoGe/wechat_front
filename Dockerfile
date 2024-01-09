@@ -14,7 +14,7 @@ RUN npm run build
 
 # 第二阶段：设置Nginx服务器
 # 使用Nginx镜像
-FROM nginx
+FROM nginx:alpine
 
 # 将构建好的静态文件从构建阶段复制到Nginx容器的服务目录
 COPY --from=build /app/build /usr/share/nginx/html
