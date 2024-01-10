@@ -92,44 +92,79 @@ export default function PermanentDrawerRight(prop: Prop) {
         };
         socketRef.current.on('msg_True', (data: any) => {
             console.log('Message from group server: ', data);
-
+            presistanceData(data,true);
         });
-        socketRef.current.on('msg_False', (data: any) => {
+
+        function presistanceData(data: any,group: boolean) {
             console.log('Message from person server: ', data);
             data = JSON.parse(data)
             let fromuserid = data['from_user_id']
-            let message = {
-                'from_user_id': fromuserid,
-                'from_user_nickname': data['from_user_nickname'],
-                'to_user_id': data['to_user_id'],
-                'to_user_nickname': data['to_user_nickname'],
-                'content': data['content'],
-                'create_time': data['create_time'],
-                'self': false,
-                'group': false,
-            }
-            let msgList: any[]=  []
-            let key = data['from_user_nickname']+'_'+message.group
-            let msgListStr = localStorage.getItem(key);
-            if(msgListStr){
-                msgList = JSON.parse(msgListStr)||[];
+            let message: any = {}
+            let msgList: any[] = []
+            let key = ''
+            let mess= {}
+            if (group){
+                 message = {
+                    'from_user_id': data['_rawmsg']['ActualUserName'],
+                    'from_user_nickname': data['_rawmsg']['ActualNickName'],
+                    'group_id': fromuserid,
+                    'group_name': data['from_user_nickname'],
+                    'to_user_id': data['to_user_id'],
+                    'to_user_nickname': data['to_user_nickname'],
+                    'content': data['content'],
+                    'create_time': data['create_time'],
+                    'self': false,
+                    'group': group,
+                }
+                mess= {
+                    from: message['group_name'],
+                    open: true,
+                    msg: data['content'],
+                    type: 'info'
+                }
+                key =  message['group_name'] + '_' + message.group
             }else {
+                message = {
+                    'from_user_id': fromuserid,
+                    'from_user_nickname': data['from_user_nickname'],
+                    'group_id': '',
+                    'group_name': '',
+                    'to_user_id': data['to_user_id'],
+                    'to_user_nickname': data['to_user_nickname'],
+                    'content': data['content'],
+                    'create_time': data['create_time'],
+                    'self': false,
+                    'group': group,
+                }
+                mess= {
+                    from: data['from_user_nickname'],
+                    open: true,
+                    msg: data['content'],
+                    type: 'success'
+                }
+                key =  data['from_user_nickname'] + '_' + message.group
+            }
+
+            let msgListStr = localStorage.getItem(key);
+            if (msgListStr) {
+                msgList = JSON.parse(msgListStr) || [];
+            } else {
                 msgList = []
             }
             msgList.push(message);
 
-            let mess = {
-                from: data['from_user_nickname'],
-                open: true,
-                msg: data['content'],
-            }
             setOpenMsg(mess)
             const lastmsg = JSON.stringify(msgList);
             //持久化收到的消息
-            localStorage.setItem(key,lastmsg)
-            if (userInfo.current_to_userid===fromuserid){
+            localStorage.setItem(key, lastmsg)
+            console.log(`person info:${userInfo.current_to_userid}和 ${fromuserid}`,);
+            if (userInfo.current_to_userid === fromuserid) {
                 dispatch({field: 'messageList', value: msgList})
             }
+        }
+
+        socketRef.current.on('msg_False', (data: any) => {
+            presistanceData(data,false);
         });
 
         socketRef.current.onclose = (event: any) => {
@@ -140,11 +175,13 @@ export default function PermanentDrawerRight(prop: Prop) {
         };
     };
     const checktoThisOne= async (UserName: string,NickName: string,group: boolean)=>{
-        let userInfo = {
+        let userInfo=   {
             current_to_userid:  UserName,
             current_to_nickname: NickName,
             group: group,
         }
+
+        console.log(`colickuserinfo${JSON.stringify(userInfo)}`)
         dispatch({field: 'userInfo', value: userInfo})
         initHistory(NickName+'_'+group);
     }
@@ -170,7 +207,7 @@ export default function PermanentDrawerRight(prop: Prop) {
         console.log("messageList 更新：", messageList);
     }, [messageList]);
     const resizeMessage= ()=>{
-        let all = rightFriends.concat(rightRoom)
+        let all = rightRoom.concat(rightFriends)
         console.log("all=",all)
         all.sort((a,b)=>a.unreadmessage- b.unreadmessage)
         setAllRightMess(all);
@@ -181,6 +218,8 @@ export default function PermanentDrawerRight(prop: Prop) {
                     current_to_userid:  currentuser.UserName,
                     current_to_nickname: currentuser.NickName,
                     group: false,
+                    group_name: '',
+                    group_id: '',
                 }
                 dispatch({field: 'userInfo', value: userInfo})
                 initHistory(currentuser.NickName+'_'+userInfo.group);
@@ -246,13 +285,13 @@ export default function PermanentDrawerRight(prop: Prop) {
 
                 </Grid>
                <Grid item xs={2} className='h-full' sx={{ border: '1px solid black'}}>
-                   {openmsg.open? <Alert onClose={() => {setOpenMsg({open: false,msg: '',from: ''})}}>{openmsg.msg}! {openmsg.from}</Alert> : ''}
+                   {openmsg.open? <Alert severity={openmsg.type} onClose={() => {setOpenMsg({open: false,msg: '',from: ''})}}>{openmsg.msg}! {openmsg.from}</Alert> : ''}
 
 
                    <List  className='h-full flex flex-col flex-nowrap'  sx={{padding: 0,overflowY: 'auto'}} >
                        {allRightMess.map((text, index) => (
                            <ListItem key={text.UserName} className=' flex' sx={{border: '1px solid grey'}}  >
-                               <ListItemButton onClick={()=>{checktoThisOne(text.UserName,text.NickName, text.type ==='room')}}>
+                               <ListItemButton onClick={()=>{checktoThisOne(text.UserName,text.NickName,text.type ==='room')}}>
                                    <ListItemIcon>
                                        {text.type  === 'room' ? <InboxIcon /> : <MailIcon />}
                                    </ListItemIcon>

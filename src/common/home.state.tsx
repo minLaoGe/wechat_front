@@ -30,6 +30,8 @@ export const initialState: HomeInitialState = {
         current_from_nickname: '',
         current_from_userid: '',
         group: false,
+        group_name: '',
+        group_id: ''
     },
     leftCount: 0,
     messageList: [],

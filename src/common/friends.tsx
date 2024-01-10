@@ -18,6 +18,8 @@ export interface Message {
     'from_user_nickname': string,
     'to_user_id': string,
     'to_user_nickname': string,
+    'group_id': string,
+    'group_name': string,
     'content': string,
     'create_time': number,
     'self': boolean,
