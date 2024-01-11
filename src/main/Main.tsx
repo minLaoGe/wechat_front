@@ -263,6 +263,12 @@ export default function PermanentDrawerRight(prop: Prop) {
     }, [rightFriends, rightRoom]); // 添加依赖数组
 
 
+    useEffect(() => {
+        // 当 rightFriends 或 rightRoom 更新时，重新计算 allRightMess
+        console.log(`变换${JSON.stringify(userInfo)}`)
+    }, [userInfo]); // 添加依赖数组
+
+
     return (
 
            <Grid container className='h-full'>
