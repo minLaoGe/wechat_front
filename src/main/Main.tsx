@@ -175,14 +175,14 @@ export default function PermanentDrawerRight(prop: Prop) {
         };
     };
     const checktoThisOne= async (UserName: string,NickName: string,group: boolean)=>{
-        let userInfo=   {
+        let userInfo2=   {
             current_to_userid:  UserName,
             current_to_nickname: NickName,
             group: group,
         }
 
-        console.log(`colickuserinfo${JSON.stringify(userInfo)}`)
-        dispatch({field: 'userInfo', value: userInfo})
+        console.log(`colickuserinfo${JSON.stringify(userInfo2)}`)
+        dispatch({field: 'userInfo', value: userInfo2})
         initHistory(NickName+'_'+group);
     }
 
@@ -214,15 +214,15 @@ export default function PermanentDrawerRight(prop: Prop) {
         if (!userInfo.current_to_userid){
             let currentuser = all[0]
             if (currentuser){
-                let userInfo = {
+                let userInfo2 = {
                     current_to_userid:  currentuser.UserName,
                     current_to_nickname: currentuser.NickName,
                     group: false,
                     group_name: '',
                     group_id: '',
                 }
-                dispatch({field: 'userInfo', value: userInfo})
-                initHistory(currentuser.NickName+'_'+userInfo.group);
+                dispatch({field: 'userInfo', value: userInfo2})
+                initHistory(currentuser.NickName+'_'+userInfo2.group);
             }
 
         }
